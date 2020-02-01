@@ -157,7 +157,7 @@ class ColorVerticalStepBarsView(ctx : Context) : View(ctx) {
         }
     }
 
-    data class ColorVertivalStepBars(var i : Int) {
+    data class ColorVerticalStepBars(var i : Int) {
 
         private var curr : CVSBNode = CVSBNode(0)
         private var dir : Int = 1
@@ -177,6 +177,28 @@ class ColorVerticalStepBarsView(ctx : Context) : View(ctx) {
 
         fun startUpdating(cb : () -> Unit) {
             curr.startUpdating(cb)
+        }
+    }
+
+    data class Renderer(var view : ColorVerticalStepBarsView) {
+
+        private val cvsb : ColorVerticalStepBars = ColorVerticalStepBars(0)
+        private val animator : Animator = Animator(view)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            cvsb.draw(canvas, paint)
+            animator.animate {
+                cvsb.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            cvsb.startUpdating {
+                animator.start()
+            }
         }
     }
 }
