@@ -15,7 +15,7 @@ import android.graphics.Color
 
 val colors : Array<String> = arrayOf("#3F51B5", "#880E4F", "#009688", "#f44336", "#4CAF50")
 val bars : Int = 5
-val scGap : Float = 0.02f
+val scGap : Float = 0.02f / bars
 val sizeFactor : Float = 5.2f
 val delay : Long = 20
 val backColor : Int = Color.parseColor("#BDBDBD")
@@ -25,16 +25,19 @@ fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse
 fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
 fun Float.sinify() : Float = Math.sin(this * Math.PI).toFloat()
 
-fun Canvas.drawColorVerticalStepBar(i : Int, scale : Float, w : Float, size : Float, paint : Paint) {
+fun Canvas.drawColorVerticalStepBar(i : Int, scale : Float, w : Float, h : Float, paint : Paint) {
     val sf : Float = scale.sinify().divideScale(i, bars)
+    val gap : Float = h / (bars + 1)
+    val size : Float = gap / sizeFactor
     save()
+    translate(0f, gap * (i + 1))
     drawRect(RectF(0f, -size, w * sf, size), paint)
     restore()
 }
 
-fun Canvas.drawColorVerticalStepBars(scale : Float, w : Float, size : Float, paint : Paint) {
+fun Canvas.drawColorVerticalStepBars(scale : Float, w : Float, h : Float, paint : Paint) {
     for (j in 0..(bars - 1)) {
-        drawColorVerticalStepBar(j, scale, w, size, paint)
+        drawColorVerticalStepBar(j, scale, w, h, paint)
     }
 }
 
@@ -45,8 +48,7 @@ fun Canvas.drawCVSBNode(i : Int, scale : Float, paint : Paint) {
     val size : Float = gap / sizeFactor
     paint.color = Color.parseColor(colors[i])
     save()
-    translate(0f, gap * (i + 1))
-    drawColorVerticalStepBars(scale, w, size, paint)
+    drawColorVerticalStepBars(scale, w, h, paint)
     restore()
 }
 
