@@ -24,3 +24,28 @@ fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
 fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
 fun Float.sinify() : Float = Math.sin(this * Math.PI).toFloat()
+
+fun Canvas.drawColorVerticalStepBar(i : Int, scale : Float, w : Float, size : Float, paint : Paint) {
+    val sf : Float = scale.sinify().divideScale(i, bars)
+    save()
+    drawRect(RectF(0f, -size, w * sf, size), paint)
+    restore()
+}
+
+fun Canvas.drawColorVerticalStepBars(scale : Float, w : Float, size : Float, paint : Paint) {
+    for (j in 0..(bars - 1)) {
+        drawColorVerticalStepBar(j, scale, w, size, paint)
+    }
+}
+
+fun Canvas.drawCVSBNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = h / (colors.size + 1)
+    val size : Float = gap / sizeFactor
+    paint.color = Color.parseColor(colors[i])
+    save()
+    translate(0f, gap * (i + 1))
+    drawColorVerticalStepBars(scale, w, size, paint)
+    restore()
+}
