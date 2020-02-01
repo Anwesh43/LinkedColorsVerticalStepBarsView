@@ -202,4 +202,13 @@ class ColorVerticalStepBarsView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : ColorVerticalStepBarsView {
+            val view : ColorVerticalStepBarsView = ColorVerticalStepBarsView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
